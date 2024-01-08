@@ -17,10 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
     switch (msg.type) {
       case "empathize":
         Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri("/emotion_recognition/models"),
-          faceapi.nets.faceLandmark68Net.loadFromUri("/emotion_recognition/models"),
-          faceapi.nets.faceRecognitionNet.loadFromUri("/emotion_recognition/models"),
-          faceapi.nets.faceExpressionNet.loadFromUri("/emotion_recognition/models"),
+          faceapi.nets.tinyFaceDetector.loadFromUri(
+            "/emotion_recognition/models"
+          ),
+          faceapi.nets.faceLandmark68Net.loadFromUri(
+            "/emotion_recognition/models"
+          ),
+          faceapi.nets.faceRecognitionNet.loadFromUri(
+            "/emotion_recognition/models"
+          ),
+          faceapi.nets.faceExpressionNet.loadFromUri(
+            "/emotion_recognition/models"
+          ),
         ]).then(startVideo);
         break;
       case "stopEmpathize":
@@ -34,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
       video.srcObject = stream;
       var counter = 0;
-      
+
       setInterval(async () => {
         try {
           const detections = await faceapi
@@ -52,19 +60,19 @@ document.addEventListener("DOMContentLoaded", function () {
           counter = counter + 1;
 
           if (counter >= 25) {
-            chrome.runtime.sendMessage({type:"currentEmotion", emotion: runningAverages})
+            chrome.runtime.sendMessage({
+              type: "currentEmotion",
+              emotion: runningAverages,
+            });
             counter = 0;
 
             Object.keys(runningAverages).forEach((key) => {
               runningAverages[key] = currentEmotions[key];
             });
           }
-        } catch (err) {
-
-        }
+        } catch (err) {}
       }, 100);
     } catch (err) {
-
       if (err.name === "NotAllowedError") {
         // User explicitly denied permission or dismissed the prompt
         alert(

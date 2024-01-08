@@ -1,6 +1,6 @@
 // Function to create an offscreen document
 var emotions = {};
-var currentEmotion = 'neutral';
+var currentEmotion = "neutral";
 
 async function createOffscreen() {
   // Check if offscreen document already exists
@@ -23,7 +23,6 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       // Create offscreen document
       await createOffscreen();
 
-
       // Send message to start empathizing with offscreen document
       await chrome.runtime.sendMessage({
         type: "empathize",
@@ -44,36 +43,30 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
         offscreen: true,
       });
 
-
       return true;
       break;
 
     case "currentEmotion":
-
-      emotions=msg.emotion;
+      emotions = msg.emotion;
 
       let maxKey = null;
       let secondMaxKey = null;
       let maxValue = 0;
 
-    
       for (const key in emotions) {
-          if (emotions[key] > maxValue) {
-              secondMaxKey = maxKey;
-              maxKey = key;
-              maxValue = emotions[key];
-              
-          }
+        if (emotions[key] > maxValue) {
+          secondMaxKey = maxKey;
+          maxKey = key;
+          maxValue = emotions[key];
+        }
       }
 
-            currentEmotion = maxKey
+      currentEmotion = maxKey;
 
       sendResponse({ message: "getEmotion message received." });
-      
 
       break;
     case "contentScriptAskingForEmotion":
-
       sendResponse({ message: currentEmotion });
       break;
     case "getResponse":
@@ -84,11 +77,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   }
 });
 
-chrome.runtime.onSuspend.addListener(()=>{
-
-  chrome.storage.session.set({"buttonState":"stop"});
-  chrome.runtime.sendMessage({type: "refresh"} , function(response){
-
-  });
+chrome.runtime.onSuspend.addListener(() => {
+  chrome.storage.session.set({ buttonState: "stop" });
+  chrome.runtime.sendMessage({ type: "refresh" }, function (response) {});
 });
-
