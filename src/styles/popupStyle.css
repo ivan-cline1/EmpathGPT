@@ -1,0 +1,32 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(243, 243, 243);
+}
+
+
+.btn-primary.active,
+.btn-primary:active {
+    background-color: #00ffd5;
+}
+.btn-danger.active,
+.btn-danger:active {
+    background-color: #d60c21;
+}
+
+.container {
+    text-align: center;
+    position: relative;
+}
+
+#optionsButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
+
