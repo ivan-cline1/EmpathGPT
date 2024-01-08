@@ -10,7 +10,11 @@ EmpathGPT is a browser extension designed for emotion recognition in text-based 
 ## Installation
 1. Download the extension package.
 2. Load it in your browser as an unpacked extension.
+
+3. Enable camera permissions for the chrome extension
 ![](readme_resources/media/enable_cam_video.gif)
+
+
 ## Usage
 - Click the extension icon to view the popup.
 - Navigate to `https://chat.openai.com/*` to enable automatic emotion analysis in chats.
