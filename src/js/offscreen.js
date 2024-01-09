@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const video = document.getElementById("video");
+  //running average of emotions
   var runningAverages = {
     angry: 0,
     fearful: 0,
@@ -15,17 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
     switch (msg.type) {
+      // When the switch is turned on, start the video stream and begin empathizing
       case "empathize":
         Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri(
             "/emotion_recognition/models"
           ),
-          faceapi.nets.faceLandmark68Net.loadFromUri(
-            "/emotion_recognition/models"
-          ),
-          faceapi.nets.faceRecognitionNet.loadFromUri(
-            "/emotion_recognition/models"
-          ),
+
           faceapi.nets.faceExpressionNet.loadFromUri(
             "/emotion_recognition/models"
           ),
@@ -45,10 +42,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       setInterval(async () => {
         try {
+          //use api to detect emotions for each frame
           const detections = await faceapi
             .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
             .withFaceExpressions();
           var currentEmotions = detections[0].expressions;
+          //calcualte running average for each emotion
           Object.keys(runningAverages).forEach((key) => {
             runningAverages[key] = calculateRunningAverage(
               currentEmotions[key],
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
 
           counter = counter + 1;
-
+          //send the background script the average emotions over 2.5 seconds
           if (counter >= 25) {
             chrome.runtime.sendMessage({
               type: "currentEmotion",
@@ -84,13 +83,13 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }
-
+//running average function
   function calculateRunningAverage(currentValue, previousAverage, count) {
     return (previousAverage * count + currentValue) / (count + 1);
   }
 
   function stopVideo() {
-    // You might want to stop the video stream when the switch is turned off
+    // stop the video stream when the switch is turned off
     const stream = video.srcObject;
     if (stream) {
       const tracks = stream.getTracks();

@@ -1,37 +1,40 @@
 try {
+  //if the window is for chatgpt
   if (window.location.href.match(/https:\/\/chat\.openai\.com\/.*/)) {
     try {
+      //Add a listener
       chrome.runtime.onMessage.addListener((msg) => {
         if (msg.type === "refresh") {
           window.location.reload();
         } else {
         }
       });
-
+      //initialize variables to attach listeners to
       const inputBox = document.getElementById("prompt-textarea");
       var currentEmotion = "neutral";
       var emotionInject = "";
       var button = document.querySelector('[data-testid="send-button"]');
 
       let intervalId;
-
+      // if you select the input box, start the interval asking for emotion
       inputBox.addEventListener("focus", function () {
         intervalId = setInterval(function () {
           chrome.runtime.sendMessage(
             { type: "contentScriptAskingForEmotion" },
             function (response) {
               currentEmotion = response.message;
+              //inject current emotion into prompt based on the switch below
               createEmotionalInjection();
               button = document.querySelector('[data-testid="send-button"]');
             }
           );
         }, 500);
       });
-
+      // when you leave the input box, stop the interval
       inputBox.addEventListener("blur", function () {
         clearInterval(intervalId);
       });
-
+      //when you press enter, inject the emotion into the prompt
       inputBox.addEventListener("keydown", function (event) {
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
@@ -63,7 +66,7 @@ try {
           "\n\n\n\n\n (try to respond empathetically as if I appeared surprised by something but make it subtle. It's as if you saw my emotion on my face but you don't want to overtly mention it- don't patronize me)";
         break;
       case "neutral":
-        emotionInject = "";
+        emotionInject = "\n\n\n\n\n (try to respond empathetically as if I appeared neutral/bored but make it subtle. It's as if you saw my emotion on my face but you don't want to overtly mention it- try to amplify my engagement, but not too much- don't patronize me)";
         break;
       case "happy":
         emotionInject =
