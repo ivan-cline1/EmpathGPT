@@ -1,7 +1,8 @@
+
 //Initialize emotional information being held by the background script
 var emotions = {};
 var currentEmotion = "neutral";
-
+var currentState = "stop";
 // Function to create an offscreen document
 async function createOffscreen() {
   // Check if offscreen document already exists
@@ -15,10 +16,22 @@ async function createOffscreen() {
   });
 }
 
+async function deleteOffscreen() {
+  // Check if offscreen document already exists
+  if (await chrome.offscreen.hasDocument()) {
+    chrome.offscreen.closeDocument(); 
+  }
+  else{
+    return;
+  }
+}
+
+
 // Listener for message from the popup
 chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   switch (msg.type) {
     case "start":
+      currentState = "start";
       sendResponse({ message: "Start message received." });
 
       // Create offscreen document
@@ -33,17 +46,22 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       return true;
       break;
     case "stop":
+      currentState = "stop";
       sendResponse({ message: "Stop message received." });
 
-      // IF the user presses "Off" before "On" Create offscreen document, and just dont allow webcam info to be read
-      await createOffscreen();
+      // IF the user presses "Off" before "On" Create offscreen document, just dont allow webcam info to be read
+      
 
       // Send message to stop empathizing with offscreen document/turn off the camera
+      try{
       await chrome.runtime.sendMessage({
         type: "stopEmpathize",
         offscreen: true,
-      });
-
+      });}
+      catch(err){
+        
+      }
+      deleteOffscreen();
       return true;
       break;
   //message is sent from the "offscreen" script, as it will send the average currentEmotion to the background on an interval
@@ -69,7 +87,12 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       break;
       //When the content script is asking for an emotion (this happens when a user is typing into the chatgpt input box), send the currentEmotion
     case "contentScriptAskingForEmotion":
+      if(currentState == "stop"){
+        sendResponse({ message: "" });
+      }
+      else{ 
       sendResponse({ message: currentEmotion });
+    }
       break;
     case "getResponse":
       sendResponse({
@@ -78,8 +101,15 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
       break;
   }
 });
+
 //When the app ends, set the button state to stop and refresh the content.js webpage so we dont have a rogue content script.
-chrome.runtime.onSuspend.addListener(() => {
+chrome.runtime.onSuspend.addListener(function () {
   chrome.storage.session.set({ buttonState: "stop" });
-  chrome.runtime.sendMessage({ type: "refresh" }, function (response) {});
+  chrome.tabs.query({ url: "https://chat.openai.com/*" }, function (tabs) {
+    tabs.forEach((tab) => {
+      chrome.tabs.sendMessage(tab.id, { type: "refresh" });
+    });
+  });
+
 });
+

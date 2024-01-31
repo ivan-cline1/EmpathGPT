@@ -1,17 +1,21 @@
 try {
+
   //if the window is for chatgpt
   if (window.location.href.match(/https:\/\/chat\.openai\.com\/.*/)) {
+    
     try {
+      
       //Add a listener
       chrome.runtime.onMessage.addListener((msg) => {
         if (msg.type === "refresh") {
-          window.location.reload();
+          window.location.href.match(/https:\/\/chat\.openai\.com\/.*/).reload();
+          clearInterval(intervalId);
         } else {
         }
       });
       //initialize variables to attach listeners to
       const inputBox = document.getElementById("prompt-textarea");
-      var currentEmotion = "neutral";
+      var currentEmotion = "";
       var emotionInject = "";
       var button = document.querySelector('[data-testid="send-button"]');
 
@@ -19,20 +23,25 @@ try {
       // if you select the input box, start the interval asking for emotion
       inputBox.addEventListener("focus", function () {
         intervalId = setInterval(function () {
+          try{
           chrome.runtime.sendMessage(
-            { type: "contentScriptAskingForEmotion" },
+            { type: "contentScriptAskingForEmotion"},
             function (response) {
               currentEmotion = response.message;
               //inject current emotion into prompt based on the switch below
               createEmotionalInjection();
               button = document.querySelector('[data-testid="send-button"]');
             }
-          );
+          );}catch(err){
+            clearInterval(intervalId);
+            
+          }
         }, 500);
       });
       // when you leave the input box, stop the interval
       inputBox.addEventListener("blur", function () {
         clearInterval(intervalId);
+        
       });
       //when you press enter, inject the emotion into the prompt
       inputBox.addEventListener("keydown", function (event) {

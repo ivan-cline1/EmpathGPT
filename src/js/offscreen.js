@@ -10,14 +10,16 @@ document.addEventListener("DOMContentLoaded", function () {
     happy: 0,
     sad: 0,
   };
-
+  var onState = false;
   chrome.runtime.onMessage.addListener((msg) => {
     if (!msg.offscreen) {
       return;
     }
     switch (msg.type) {
       // When the switch is turned on, start the video stream and begin empathizing
-      case "empathize":
+      case "empathize": 
+        if (!onState){
+        onState = true;
         Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri(
             "/emotion_recognition/models"
@@ -27,10 +29,12 @@ document.addEventListener("DOMContentLoaded", function () {
             "/emotion_recognition/models"
           ),
         ]).then(startVideo);
-        break;
+      }
+      break;
       case "stopEmpathize":
         stopVideo();
-        break;
+        onState = false;
+        break;  
     }
   });
 
