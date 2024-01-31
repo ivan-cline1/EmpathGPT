@@ -33,7 +33,7 @@ EmpathGPT is a browser extension designed for emotion recognition in one's face 
 - Unit tests :P
 
 ## Future Additions
-- Using a more "nuanced" emotion recognition model that can be personalized to the user's unique facial reflection of emotions. 
+- Using a more "nuanced" emotion recognition model that can be personalized to the user's unique facial reflection of emotions (personally tuned eigenfaces?). 
 - Getting a design for the logo and publishing it to the Chrome Extension Store.
   
 -----!Contributions to EmpathGPT are encouraged!-----
