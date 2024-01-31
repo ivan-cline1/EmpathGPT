@@ -27,6 +27,7 @@ EmpathGPT is a browser extension designed for emotion recognition in one's face 
 
 
 ## Works In Progress
+- Publishing! A logo is still needed. 
 - Coding something in the background worker script to allow the user to accept camera permissions from the extension on runtime (instead of having to go through their settings)
 - Making the messaging sending/catching intervals more efficient and synchronized
 - Modifying the injection texts to make ChatGPT respond even more empathetically.
