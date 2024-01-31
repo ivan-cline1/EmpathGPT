@@ -1,7 +1,7 @@
 # EmpathGPT
 
 ## Overview
-EmpathGPT is a browser extension designed for emotion recognition in one's face during text-based interactions with the ChatGPT website. The purpose is to allow ChatGPT to "see" your current emotion while prompting it to respond more empathetically based on the user's feelings. This extension can be forked and used to enhance the new GPT store products on the openai website in whatever way you want! 
+EmpathGPT is a browser extension designed for emotion recognition in one's face during text-based interactions with the ChatGPT website. The purpose is to allow ChatGPT to "see" your current emotion while prompting it to respond more empathetically based on the user's feelings. This extension can be forked and used to enhance the new GPT store products on the OpenAI website in whatever way you want! 
 
 ## Features
 - Utilizes the javascript face-api.js API to analyze users' faces and infer emotional context while they prompt ChatGPT on the open website.
