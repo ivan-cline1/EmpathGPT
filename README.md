@@ -8,7 +8,7 @@ EmpathGPT is a browser extension designed for emotion recognition in one's face 
 
   The javascript face-api.js project can be found here: https://github.com/justadudewhohacks/face-api.js
 
-  The license it uses is: MIT License Copyright (c) 2018 Vincent Mühler, full license description can be found on the above link and can be found in the emotion_recognition/LicenseAgreementForCodeInThisFolder.txt
+  The license it uses is: MIT License Copyright (c) 2018 Vincent Mühler, full license description can be found in the above link and can be found in the emotion_recognition/LicenseAgreementForCodeInThisFolder.txt
 
 - The EmpathGPT extension then uses your perceived emotion to inject more text into your ChatGPT prompt so that ChatGPT responds accordingly and empathetically.
 
