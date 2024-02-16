@@ -21,7 +21,7 @@
       "resources": ["/emotion_recognition/models/*"],
       "matches": ["<all_urls>"]
     }],
-  "permissions": ["offscreen","storage"],
+  "permissions": ["offscreen","storage","tabs"],
   "content_scripts": [
     {
       "matches": ["https://chat.openai.com/*"],

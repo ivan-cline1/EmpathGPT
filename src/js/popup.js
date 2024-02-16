@@ -18,6 +18,7 @@ document.getElementById("stopButton").addEventListener("click", function () {
   });
 });
 
+
 // Reload the highlight based on the stored button state
 
 window.addEventListener("DOMContentLoaded", function () {

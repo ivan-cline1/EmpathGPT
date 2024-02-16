@@ -4,6 +4,7 @@ var emotions = {};
 var currentEmotion = "neutral";
 var currentState = "stop";
 // Function to create an offscreen document
+
 async function createOffscreen() {
   // Check if offscreen document already exists
   if (await chrome.offscreen.hasDocument()) return;
@@ -33,7 +34,13 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
     case "start":
       currentState = "start";
       sendResponse({ message: "Start message received." });
-
+      chrome.tabs.query({url: "https://chat.openai.com/*"}, function(tab) {
+        // reload tab with one of the methods from linked answer
+        for(const item of tab){
+          chrome.tabs.reload(item.id) 
+        }
+        
+     })
       // Create offscreen document
       await createOffscreen();
 
@@ -48,7 +55,12 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
     case "stop":
       currentState = "stop";
       sendResponse({ message: "Stop message received." });
-
+      chrome.tabs.query({url: "https://chat.openai.com/*"}, function(tab) {
+        // reload tab with one of the methods from linked answer
+        for(const item of tab){
+          chrome.tabs.reload(item.id) 
+        } 
+     })
       // IF the user presses "Off" before "On" Create offscreen document, just dont allow webcam info to be read
       
 
@@ -102,7 +114,7 @@ chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
   }
 });
 
-//When the app ends, set the button state to stop and refresh the content.js webpage so we dont have a rogue content script.
+//When the app ends, set the button state to stop and refresh the content.js webpage so we dont have a rogue content script causing errors
 chrome.runtime.onSuspend.addListener(function () {
   chrome.storage.session.set({ buttonState: "stop" });
   chrome.tabs.query({ url: "https://chat.openai.com/*" }, function (tabs) {
